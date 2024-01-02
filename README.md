@@ -8,7 +8,7 @@ This project is built on the `dbt_artifacts` package for dbt.  It takes the outp
     ```yaml
     packages:
       - git: "https://github.com/irvingpop/dbt_otel_export.git"
-        revision: main
+        revision: v1.0.0
     ```
 
 2. Run `dbt deps` to install the package
@@ -45,6 +45,12 @@ This project is built on the `dbt_artifacts` package for dbt.  It takes the outp
       HONEYCOMB_DATASET='dbt_runs' \
       ./otelcol-contrib --config examples/otel-collector-config.yaml
     ```
+
+8. Now you should have traces available to view!  Example screenshots from Honeycomb:
+
+![Honeycomb trace viewer](/examples/images/hny_trace_view.png)
+![Honeycomb concurrency query](/examples/images/hny_concurrency.png)
+![Honeycomb heatmap](/examples/images/hny_heatmap.png)
 
 ## For more information
 
