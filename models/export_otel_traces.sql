@@ -1,10 +1,7 @@
 -- noqa: disable=ST06,RF04,RF05
 {{ config(
     materialized='view',
-    post_hook=[
-        "{{ create_otel_deps() }}",
-        "{{ dbt_artifacts.upload_results(results) }}"
-    ]
+    post_hook="{{ create_otel_deps() }}"
 ) }}
 
 with
