@@ -6,71 +6,107 @@ models:
     columns:
         - name: trace.trace_id
           tests: [not_null]
+          quote: true
         - name: trace.span_id
           tests: [not_null]
+          quote: true
         - name: trace.parent_id
           tests: [not_null]
+          quote: true
         - name: timestamp
           tests: [not_null]
+          quote: true
         - name: duration_ms
           tests: [not_null]
+          quote: true
         - name: dbt.version
           tests: [not_null]
+          quote: true
         - name: dbt.project_name
           tests: [not_null]
+          quote: true
         - name: dbt.run_started_at
           tests: [not_null]
+          quote: true
         - name: dbt.command
+          quote: true
           tests: [not_null]
+          quote: true
         - name: dbt.full_refresh_flag
           tests: [not_null]
+          quote: true
         - name: dbt.target_profile_name
           tests: [not_null]
+          quote: true
         - name: dbt.target_name
           tests: [not_null]
+          quote: true
         - name: dbt.target_schema
           tests: [not_null]
+          quote: true
         - name: dbt.target_threads
           tests: [not_null]
+          quote: true
         - name: dbt.cloud.project_id
           tests: [not_null]
+          quote: true
         - name: dbt.cloud.job_id
           tests: [not_null]
+          quote: true
         - name: dbt.cloud.run_id
           tests: [not_null]
+          quote: true
         - name: dbt.cloud.run_reason_category
           tests: [not_null]
+          quote: true
         - name: dbt.cloud.run_reason
           tests: [not_null]
+          quote: true
         - name: dbt.env_vars
           tests: [not_null]
+          quote: true
         - name: dbt.vars
           tests: [not_null]
+          quote: true
         - name: dbt.invocation_args
           tests: [not_null]
+          quote: true
         - name: dbt.custom_envs
           tests: [not_null]
+          quote: true
         - name: dbt.model.node_id
           tests: [not_null]
+          quote: true
         - name: dbt.model.was_full_refresh
           tests: [not_null]
+          quote: true
         - name: dbt.model.thread_id
           tests: [not_null]
+          quote: true
         - name: dbt.model.status
           tests: [not_null]
+          quote: true
         - name: dbt.model.query_completed_at
           tests: [not_null]
+          quote: true
         - name: dbt.model.rows_affected
           tests: [not_null]
+          quote: true
         - name: dbt.model.materialization
           tests: [not_null]
+          quote: true
         - name: dbt.model.schema
           tests: [not_null]
+          quote: true
         - name: name
           tests: [not_null]
+          quote: true
         - name: dbt.model.alias
           tests: [not_null]
+          quote: true
         - name: message
           tests: [not_null]
+          quote: true
         - name: status_code
           tests: [not_null]
+          quote: true
