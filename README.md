@@ -16,8 +16,13 @@ This project is built on the `dbt_artifacts` package for dbt.  It takes the outp
 3. Add an on-run-end hook to your `dbt_project.yml`
 
     ```yml
+    # during the development cycle
     on-run-end:
       - "{{ dbt_artifacts.upload_results(results) }}"
+
+    # later, when in production
+    on-run-end:
+      - "{% if target.name == 'prod' %}{{ dbt_artifacts.upload_results(results) }}{% endif %}"
     ```
 
 3. Run the initial setup for dbt_artifacts
