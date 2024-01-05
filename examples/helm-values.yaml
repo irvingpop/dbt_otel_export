@@ -1,0 +1,105 @@
+mode: deployment
+
+extraEnvs:
+  - name: SNOWFLAKE_USERNAME
+    valueFrom:
+      secretKeyRef:
+        name: otelcol-snowflake
+        key: snowflake_username
+  - name: SNOWFLAKE_PASSWORD
+    valueFrom:
+      secretKeyRef:
+        name: otelcol-snowflake
+        key: snowflake_password
+  - name: SNOWFLAKE_INSTANCE
+    valueFrom:
+      secretKeyRef:
+        name: otelcol-snowflake
+        key: snowflake_instance
+  - name: SNOWFLAKE_DATABASE
+    valueFrom:
+      secretKeyRef:
+        name: otelcol-snowflake
+        key: snowflake_database
+  - name: SNOWFLAKE_SCHEMA
+    valueFrom:
+      secretKeyRef:
+        name: otelcol-snowflake
+        key: snowflake_schema
+  - name: SNOWFLAKE_WAREHOUSE
+    valueFrom:
+      secretKeyRef:
+        name: otelcol-snowflake
+        key: snowflake_warehouse
+  - name: SNOWFLAKE_ROLE
+    valueFrom:
+      secretKeyRef:
+        name: otelcol-snowflake
+        key: snowflake_role
+  - name: HONEYCOMB_API_KEY
+    valueFrom:
+      secretKeyRef:
+        name: otelcol-snowflake
+        key: honeycomb_api_key
+  - name: HONEYCOMB_DATASET
+    valueFrom:
+      secretKeyRef:
+        name: otelcol-snowflake
+        key: honeycomb_dataset
+
+# We only want one of these collectors - any more and we'd produce duplicate data
+replicaCount: 1
+
+image:
+  repository: irvingpop/otel-collector-snowflake
+  pullPolicy: IfNotPresent
+  tag: v1.2.0
+
+command:
+  name: /otelcol-snowflake
+  extraArgs: []
+
+config:
+  receivers:
+    zipkin: null
+    otlp: null
+    jaeger: null
+    prometheus: null
+    sqlquery/prod:
+      driver: snowflake
+      datasource: "${env:SNOWFLAKE_USERNAME}:${env:SNOWFLAKE_PASSWORD}@${env:SNOWFLAKE_INSTANCE}/${env:SNOWFLAKE_DATABASE}/${env:SNOWFLAKE_SCHEMA}?warehouse=${env:SNOWFLAKE_WAREHOUSE}&role=${env:SNOWFLAKE_ROLE}"
+      collection_interval: 60s
+      queries:
+        - sql: |
+            call get_latest_otel_traces()
+          metrics:
+            - metric_name: duration_ms
+              value_column: duration_ms
+              value_type: double
+              attribute_columns: ["trace.trace_id", "trace.span_id", "trace.parent_id", "timestamp", "duration_ms", "dbt.version", "dbt.project_name", "dbt.run_started_at", "dbt.command", "dbt.full_refresh_flag", "dbt.target_profile_name", "dbt.target_name", "dbt.target_schema", "dbt.target_threads", "dbt.cloud.project_id", "dbt.cloud.job_id", "dbt.cloud.run_id", "dbt.cloud.run_reason_category", "dbt.cloud.run_reason", "dbt.env_vars", "dbt.vars", "dbt.invocation_args", "dbt.custom_envs", "dbt.model.node_id", "dbt.model.was_full_refresh", "dbt.model.thread_id", "dbt.model.status", "dbt.model.query_completed_at", "dbt.model.rows_affected", "dbt.model.materialization", "dbt.model.schema", "name", "dbt.model.alias", "message", "status_code"]
+              ts_column: timestamp
+              static_attributes:
+                service.name: dbt_prod
+
+  processors:
+    batch: {}
+
+  exporters:
+    debug:
+      verbosity: basic
+      # uncomment below to log all messages to the console
+      # verbosity: detailed
+    otlp:
+      endpoint: "api.honeycomb.io:443"
+      headers:
+        "x-honeycomb-team": ${env:HONEYCOMB_API_KEY}
+        "x-honeycomb-dataset": ${env:HONEYCOMB_DATASET}
+
+  service:
+    pipelines:
+      traces: null
+      logs: null
+      metrics:
+        receivers: [sqlquery/prod]
+        processors: [batch]
+        exporters: [debug, otlp]
