@@ -1,9 +1,14 @@
-FROM golang:1.21-alpine as build
+FROM golang:1.22-alpine as build
+
+ENV OCB_VERSION=0.99.0
+ENV OCB_ARCH=arm64
+ENV OCB_DOWNLOAD_URL_BASE="https://github.com/open-telemetry/opentelemetry-collector/releases/download/"
+ENV OCB_DOWNLOAD_URL="${OCB_DOWNLOAD_URL_BASE}cmd%2Fbuilder%2Fv${OCB_VERSION}/ocb_${OCB_VERSION}_linux_${OCB_ARCH}"
 
 WORKDIR /workdir
 COPY collector-builder-config.yaml /workdir/collector-builder-config.yaml
 RUN apk update && apk add --no-cache curl
-RUN curl -L -o ocb "https://github.com/open-telemetry/opentelemetry-collector/releases/download/cmd%2Fbuilder%2Fv0.91.0/ocb_0.91.0_linux_$(go version |  cut -d'/' -f 2)" && chmod +x ocb
+RUN curl -L -o ocb "${OCB_DOWNLOAD_URL}" && chmod +x ocb
 RUN ./ocb --config collector-builder-config.yaml
 
 FROM cgr.dev/chainguard/static:latest
