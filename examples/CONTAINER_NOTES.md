@@ -2,7 +2,13 @@
 
 ```
 # from the examples folder
-docker build -t <my_docker_org>/otel-collector-snowflake .
+MYORG=irvingpop
+MYVER=v1.4.0
+docker buildx build --platform linux/amd64,linux/arm64 -t ${MYORG}/otel-collector-snowflake:${MYVER}
+docker tag ${MYORG}/otel-collector-snowflake:${MYVER} ${MYORG}/otel-collector-snowflake:latest
+docker push ${MYORG}/otel-collector-snowflake:${MYVER}
+docker push ${MYORG}/otel-collector-snowflake:latest
+
 
 # Running with the inbuilt collector config file, supplying config via env vars
 docker run --rm -it \
