@@ -8,7 +8,7 @@ This project is built on the `dbt_artifacts` package for dbt.  It takes the outp
     ```yaml
     packages:
       - git: "https://github.com/irvingpop/dbt_otel_export.git"
-        revision: v1.1.0
+        revision: v1.1.2
     ```
 
 2. Run `dbt deps` to install the package

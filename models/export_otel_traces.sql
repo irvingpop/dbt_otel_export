@@ -46,8 +46,9 @@ child_spans as (
         model_executions.was_full_refresh,
         model_executions.thread_id,
         model_executions.status,
-        model_executions.compile_started_at,
-        model_executions.query_completed_at,
+        -- workaround for skipped models so they don't have a null timestamp, coalesce to run_started_at if null
+        coalesce(model_executions.compile_started_at, model_executions.run_started_at) as compile_started_at,
+        coalesce(model_executions.query_completed_at, model_executions.run_started_at) as query_completed_at,
         (model_executions.total_node_runtime * 1000) as total_node_runtime, -- convert seconds into milliseconds
         model_executions.rows_affected,
         model_executions.materialization as db_materialization,
