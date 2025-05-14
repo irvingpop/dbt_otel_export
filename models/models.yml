@@ -31,7 +31,6 @@ models:
         - name: dbt.command
           quote: true
           tests: [not_null]
-          quote: true
         - name: dbt.full_refresh_flag
           tests: [not_null]
           quote: true
